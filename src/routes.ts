@@ -1,6 +1,6 @@
 import { isNil, omit } from "lodash-es";
 
-import { deepFreeze } from "./utils";
+import { deepFreeze } from "./utils-browser";
 
 import type { Head } from "@unhead/schema";
 import type {

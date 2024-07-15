@@ -7,7 +7,7 @@ var middie = require('@fastify/middie');
 var client = require('./client.cjs');
 var html = require('./html.cjs');
 var render = require('./render.cjs');
-var utils = require('./utils.cjs');
+var utilsNode = require('./utils-node.cjs');
 
 async function development(fastify, options, viteConfig) {
     const { createNodeDevEnvironment, createServer, createServerModuleRunner, mergeConfig, } = await import('vite');
@@ -37,7 +37,7 @@ async function development(fastify, options, viteConfig) {
         return client$1;
     }
     fastify.addHook("onRequest", async (request, reply) => {
-        const indexHtml = await promises.readFile(utils.resolve("index.html"), "utf-8");
+        const indexHtml = await promises.readFile(utilsNode.resolve("index.html"), "utf-8");
         const template = await server.transformIndexHtml(request.url, indexHtml);
         reply.html = html.default(template);
         reply.render = await render.default(await loadClient());

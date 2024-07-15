@@ -1,5 +1,5 @@
 import { omit, isNil } from 'lodash-es';
-import { deepFreeze } from './utils.js';
+import { deepFreeze } from './utils-browser.js';
 
 function formatPath(path) {
     return path.replace(/\/+/g, "/").replace(/(?!^)\/$/, "");

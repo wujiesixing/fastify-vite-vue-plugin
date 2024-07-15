@@ -4,7 +4,7 @@ import fastifyStatic from '@fastify/static';
 import prepareClient from './client.js';
 import createHtmlFunction from './html.js';
 import createRenderFunction from './render.js';
-import { resolve } from './utils.js';
+import { resolve } from './utils-node.js';
 
 async function production(fastify, options, viteConfig) {
     const { root, build } = viteConfig;

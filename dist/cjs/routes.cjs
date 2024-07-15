@@ -1,7 +1,7 @@
 'use strict';
 
 var lodashEs = require('lodash-es');
-var utils = require('./utils.cjs');
+var utilsBrowser = require('./utils-browser.cjs');
 
 function formatPath(path) {
     return path.replace(/\/+/g, "/").replace(/(?!^)\/$/, "");
@@ -63,7 +63,7 @@ function getRoutes(array, base) {
             throw new Error(`类型检测不通过：${JSON.stringify(route)}`);
         });
     }
-    return utils.deepFreeze(_getRoutes(array, base));
+    return utilsBrowser.deepFreeze(_getRoutes(array, base));
 }
 function flatRoutes(array, base) {
     const paths = [];
@@ -102,7 +102,7 @@ function flatRoutes(array, base) {
             }
         });
     }
-    return utils.deepFreeze(_flatRoutes(array, base));
+    return utilsBrowser.deepFreeze(_flatRoutes(array, base));
 }
 
 exports.flatRoutes = flatRoutes;

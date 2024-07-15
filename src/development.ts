@@ -5,7 +5,7 @@ import middie from "@fastify/middie";
 import prepareClient from "./client";
 import createHtmlFunction from "./html";
 import createRenderFunction from "./render";
-import { resolve } from "./utils";
+import { resolve } from "./utils-node";
 
 import type { FastifyInstance } from "fastify";
 import type { Options } from "./plugin";

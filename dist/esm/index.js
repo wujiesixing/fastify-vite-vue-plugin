@@ -1,2 +1,2 @@
 export { default } from './plugin.js';
-export { flatRoutes, getRoutes } from './routes.js';
+export { flatRoutes } from './routes.js';
