@@ -36,7 +36,7 @@ export default function createHtmlFunction(source: string): HtmlFunc {
           headTags,
           bodyAttrs,
           bodyTagsOpen,
-          hydration: `<script>window.__ROBOSEN_INITIAL_CONTEXT__=${uneval(
+          hydration: `<script>window.__INITIAL_CONTEXT__=${uneval(
             ctx
           )};</script>`,
         }),

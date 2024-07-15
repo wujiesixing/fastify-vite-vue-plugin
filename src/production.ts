@@ -48,7 +48,9 @@ export default async function production(
 
     const module = await import(serverInput);
 
-    const client = prepareClient(module);
+    const client = options.prepareClient
+      ? await options.prepareClient(module)
+      : prepareClient(module);
 
     return { client, ssrManifest };
   }

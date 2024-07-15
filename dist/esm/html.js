@@ -22,7 +22,7 @@ function createHtmlFunction(source) {
             headTags,
             bodyAttrs,
             bodyTagsOpen,
-            hydration: `<script>window.__ROBOSEN_INITIAL_CONTEXT__=${uneval(ctx)};</script>`,
+            hydration: `<script>window.__INITIAL_CONTEXT__=${uneval(ctx)};</script>`,
         }), body ?? stream ?? "", footerTemplate({
             bodyTags,
         })));

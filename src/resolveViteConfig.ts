@@ -1,45 +1,49 @@
-import process from 'process'
-import { resolveConfig } from 'vite'
+import process from "node:process";
 
-import type { UserConfig } from 'vite'
+import { resolveConfig } from "vite";
 
-export type ViteConfig = Omit<UserConfig, 'root' | 'mode' | 'build'> & {
-  root: string
-  mode: 'development' | 'production'
+import type { UserConfig } from "vite";
+
+export type ViteConfig = Omit<UserConfig, "root" | "mode" | "build"> & {
+  root: string;
+  mode: "development" | "production";
   build: {
-    assetsDir: string
-    outDir: string
-  }
-}
+    assetsDir: string;
+    outDir: string;
+  };
+};
 
-export default async function resolveViteConfig(configFile: string): Promise<ViteConfig> {
-  const command = process.env.NODE_ENV === 'development' ? 'serve' : 'build'
-  const mode = process.env.NODE_ENV === 'development' ? 'development' : 'production'
-  const isPreview = false
+export default async function resolveViteConfig(
+  configFile: string
+): Promise<ViteConfig> {
+  const command = process.env.NODE_ENV === "development" ? "serve" : "build";
+  const mode =
+    process.env.NODE_ENV === "development" ? "development" : "production";
+  const isPreview = false;
 
   const config = await resolveConfig(
     {
-      configFile
+      configFile,
     },
     command,
     mode,
-    process.env.NODE_ENV === 'development' ? 'development' : 'production',
+    process.env.NODE_ENV === "development" ? "development" : "production",
     isPreview
-  )
+  );
 
-  if (process.platform === 'win32') {
-    configFile = `file://${configFile}`
+  if (process.platform === "win32") {
+    configFile = `file://${configFile}`;
   }
 
-  let { default: userConfig } = await import(configFile)
+  let { default: userConfig } = await import(configFile);
 
-  if (typeof userConfig === 'function') {
+  if (typeof userConfig === "function") {
     userConfig = userConfig({
       command,
       mode,
       isSsrBuild: true,
-      isPreview
-    })
+      isPreview,
+    });
   }
 
   return Object.assign(userConfig, {
@@ -47,7 +51,7 @@ export default async function resolveViteConfig(configFile: string): Promise<Vit
     mode,
     build: {
       assetsDir: config.build.assetsDir,
-      outDir: config.build.outDir
-    }
-  })
+      outDir: config.build.outDir,
+    },
+  });
 }

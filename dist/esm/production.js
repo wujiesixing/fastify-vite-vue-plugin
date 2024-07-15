@@ -29,7 +29,9 @@ async function production(fastify, options, viteConfig) {
         const ssrManifest = resolve(clientDist, ".vite", "ssr-manifest.json");
         const serverInput = resolve(serverDist, "index.js");
         const module = await import(serverInput);
-        const client = prepareClient(module);
+        const client = options.prepareClient
+            ? await options.prepareClient(module)
+            : prepareClient(module);
         return { client, ssrManifest };
     }
     return client;
