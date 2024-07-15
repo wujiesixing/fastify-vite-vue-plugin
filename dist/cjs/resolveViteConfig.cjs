@@ -3,13 +3,13 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var process = require('node:process');
-var vite = require('vite');
 
 async function resolveViteConfig(configFile) {
+    const { resolveConfig } = await import('vite');
     const command = process.env.NODE_ENV === "development" ? "serve" : "build";
     const mode = process.env.NODE_ENV === "development" ? "development" : "production";
     const isPreview = false;
-    const config = await vite.resolveConfig({
+    const config = await resolveConfig({
         configFile,
     }, command, mode, process.env.NODE_ENV === "development" ? "development" : "production", isPreview);
     if (process.platform === "win32") {

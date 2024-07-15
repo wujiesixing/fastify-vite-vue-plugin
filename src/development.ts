@@ -1,12 +1,6 @@
 import { readFile } from "node:fs/promises";
 
 import middie from "@fastify/middie";
-import {
-  createNodeDevEnvironment,
-  createServer,
-  createServerModuleRunner,
-  mergeConfig,
-} from "vite";
 
 import prepareClient from "./client";
 import createHtmlFunction from "./html";
@@ -22,6 +16,13 @@ export default async function development(
   options: Options,
   viteConfig: ViteConfig
 ) {
+  const {
+    createNodeDevEnvironment,
+    createServer,
+    createServerModuleRunner,
+    mergeConfig,
+  } = await import("vite");
+
   const config = mergeConfig(
     {
       configFile: false,

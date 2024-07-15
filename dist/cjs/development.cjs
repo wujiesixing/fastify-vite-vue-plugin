@@ -4,27 +4,27 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var promises = require('node:fs/promises');
 var middie = require('@fastify/middie');
-var vite = require('vite');
 var client = require('./client.cjs');
 var html = require('./html.cjs');
 var render = require('./render.cjs');
 var utils = require('./utils.cjs');
 
 async function development(fastify, options, viteConfig) {
-    const config = vite.mergeConfig({
+    const { createNodeDevEnvironment, createServer, createServerModuleRunner, mergeConfig, } = await import('vite');
+    const config = mergeConfig({
         configFile: false,
         server: { middlewareMode: true },
         appType: "custom",
         environments: {
             node: {
                 dev: {
-                    createEnvironment: vite.createNodeDevEnvironment,
+                    createEnvironment: createNodeDevEnvironment,
                 },
             },
         },
     }, viteConfig);
-    const server = await vite.createServer(config);
-    const runner = await vite.createServerModuleRunner(server.environments.node);
+    const server = await createServer(config);
+    const runner = await createServerModuleRunner(server.environments.node);
     await fastify.register(middie);
     fastify.use(server.middlewares);
     fastify.decorateReply("render", null);

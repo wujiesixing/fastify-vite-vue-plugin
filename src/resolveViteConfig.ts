@@ -1,7 +1,5 @@
 import process from "node:process";
 
-import { resolveConfig } from "vite";
-
 import type { UserConfig } from "vite";
 
 export type ViteConfig = Omit<UserConfig, "root" | "mode" | "build"> & {
@@ -16,6 +14,8 @@ export type ViteConfig = Omit<UserConfig, "root" | "mode" | "build"> & {
 export default async function resolveViteConfig(
   configFile: string
 ): Promise<ViteConfig> {
+  const { resolveConfig } = await import("vite");
+
   const command = process.env.NODE_ENV === "development" ? "serve" : "build";
   const mode =
     process.env.NODE_ENV === "development" ? "development" : "production";
