@@ -19,11 +19,11 @@ export interface SSRContext
   state: null | Record<string, any>;
   data: Array<{
     id: symbol;
-    baseURL: string;
-    url: string;
-    params: string;
-    data: string;
-    method: string;
+    baseURL?: string;
+    url?: string;
+    params?: string;
+    data?: string;
+    method?: string;
     end: null | number;
     resolve: null | any;
     reject: null | any;
