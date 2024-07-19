@@ -1,6 +1,6 @@
 {
   "name": "fastify-vite-vue-plugin",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "",
   "type": "module",
   "main": "dist/cjs/index.cjs",
@@ -10,12 +10,12 @@
     ".": {
       "import": "./dist/esm/index.js",
       "require": "./dist/cjs/index.cjs",
-      "types": "./dist/types/index.d.js"
+      "types": "./dist/types/index.d.ts"
     },
     "./browser": {
       "import": "./dist/esm/browser.js",
       "require": "./dist/cjs/browser.cjs",
-      "types": "./dist/types/browser.d.js"
+      "types": "./dist/types/browser.d.ts"
     }
   },
   "files": [
