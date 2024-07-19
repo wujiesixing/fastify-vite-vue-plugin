@@ -22,8 +22,8 @@ function getRoutes(array, base) {
             }
             names.push(name);
             path = formatPath(path);
-            const provide = defaultsDeep(meta?.provide, _base?.meta);
-            meta = defaultsDeep(omit(meta, ["provide"]), provide);
+            const provide = defaultsDeep({}, meta?.provide, _base?.meta);
+            meta = defaultsDeep({}, omit(meta, ["provide"]), provide);
             if (component && isNil(redirect) && isNil(children)) {
                 return {
                     ...route,
@@ -64,8 +64,8 @@ function flatRoutes(array, base) {
             let { meta } = route;
             const { path, component, redirect, children } = route;
             const fullPath = getFullPath(path, _base?.path);
-            const provide = defaultsDeep(meta?.provide, _base?.meta);
-            meta = defaultsDeep(omit(meta, ["provide"]), provide);
+            const provide = defaultsDeep({}, meta?.provide, _base?.meta);
+            meta = defaultsDeep({}, omit(meta, ["provide"]), provide);
             let currentRoute = null;
             if (component || redirect) {
                 if (paths.includes(fullPath)) {

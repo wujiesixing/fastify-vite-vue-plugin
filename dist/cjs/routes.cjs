@@ -24,8 +24,8 @@ function getRoutes(array, base) {
             }
             names.push(name);
             path = formatPath(path);
-            const provide = lodashEs.defaultsDeep(meta?.provide, _base?.meta);
-            meta = lodashEs.defaultsDeep(lodashEs.omit(meta, ["provide"]), provide);
+            const provide = lodashEs.defaultsDeep({}, meta?.provide, _base?.meta);
+            meta = lodashEs.defaultsDeep({}, lodashEs.omit(meta, ["provide"]), provide);
             if (component && lodashEs.isNil(redirect) && lodashEs.isNil(children)) {
                 return {
                     ...route,
@@ -66,8 +66,8 @@ function flatRoutes(array, base) {
             let { meta } = route;
             const { path, component, redirect, children } = route;
             const fullPath = getFullPath(path, _base?.path);
-            const provide = lodashEs.defaultsDeep(meta?.provide, _base?.meta);
-            meta = lodashEs.defaultsDeep(lodashEs.omit(meta, ["provide"]), provide);
+            const provide = lodashEs.defaultsDeep({}, meta?.provide, _base?.meta);
+            meta = lodashEs.defaultsDeep({}, lodashEs.omit(meta, ["provide"]), provide);
             let currentRoute = null;
             if (component || redirect) {
                 if (paths.includes(fullPath)) {

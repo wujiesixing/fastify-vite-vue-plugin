@@ -113,9 +113,9 @@ export function getRoutes(
 
       path = formatPath(path);
 
-      const provide = defaultsDeep(meta?.provide, _base?.meta);
+      const provide = defaultsDeep({}, meta?.provide, _base?.meta);
 
-      meta = defaultsDeep(omit(meta, ["provide"]), provide);
+      meta = defaultsDeep({}, omit(meta, ["provide"]), provide);
 
       if (component && isNil(redirect) && isNil(children)) {
         return {
@@ -177,9 +177,9 @@ export function flatRoutes(
 
       const fullPath = getFullPath(path, _base?.path);
 
-      const provide = defaultsDeep(meta?.provide, _base?.meta);
+      const provide = defaultsDeep({}, meta?.provide, _base?.meta);
 
-      meta = defaultsDeep(omit(meta, ["provide"]), provide);
+      meta = defaultsDeep({}, omit(meta, ["provide"]), provide);
 
       let currentRoute: RouteNode | null = null;
 
