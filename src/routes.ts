@@ -1,4 +1,4 @@
-import { isNil, omit } from "lodash-es";
+import { defaultsDeep, isNil, omit } from "lodash-es";
 
 import { deepFreeze } from "./utils-browser";
 
@@ -113,15 +113,9 @@ export function getRoutes(
 
       path = formatPath(path);
 
-      const provide = {
-        ..._base?.meta,
-        ...meta?.provide,
-      };
+      const provide = defaultsDeep(meta?.provide, _base?.meta);
 
-      meta = {
-        ...provide,
-        ...omit(meta, ["provide"]),
-      };
+      meta = defaultsDeep(omit(meta, ["provide"]), provide);
 
       if (component && isNil(redirect) && isNil(children)) {
         return {
@@ -183,15 +177,9 @@ export function flatRoutes(
 
       const fullPath = getFullPath(path, _base?.path);
 
-      const provide = {
-        ..._base?.meta,
-        ...meta?.provide,
-      };
+      const provide = defaultsDeep(meta?.provide, _base?.meta);
 
-      meta = {
-        ...provide,
-        ...omit(meta, ["provide"]),
-      };
+      meta = defaultsDeep(omit(meta, ["provide"]), provide);
 
       let currentRoute: RouteNode | null = null;
 
