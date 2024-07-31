@@ -19,7 +19,10 @@ export default function createHtmlFunction(source: string): HtmlFunc {
   const headTemplate = createTemplateFunction(headSource);
   const footerTemplate = createTemplateFunction(footerSource);
 
-  return async function (this: FastifyReply, { ctx, body, stream }) {
+  return async function (
+    this: FastifyReply,
+    { ctx, body, stream, preloadLinks }
+  ) {
     const head = createServerHead();
 
     if (ctx.head) {
@@ -39,6 +42,7 @@ export default function createHtmlFunction(source: string): HtmlFunc {
           hydration: `<script>window.__INITIAL_CONTEXT__=${uneval(
             ctx
           )};</script>`,
+          preloadLinks,
         }),
         body ?? stream ?? "",
         footerTemplate({

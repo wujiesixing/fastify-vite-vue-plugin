@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 
 import fastifyStatic from "@fastify/static";
@@ -9,6 +9,7 @@ import createRenderFunction from "./render";
 import { resolve } from "./utils-node";
 
 import type { FastifyInstance } from "fastify";
+import type { Manifest } from "./client";
 import type { Options } from "./plugin";
 import type { ViteConfig } from "./resolveViteConfig";
 
@@ -36,14 +37,20 @@ export default async function production(
     prefix: `/${assetsDir}/`,
   });
 
-  const { client } = await loadClient();
-  fastify.decorateReply("render", await createRenderFunction(client));
+  const { client, manifest } = await loadClient();
+  fastify.decorateReply(
+    "render",
+    await createRenderFunction({ ...client, manifest })
+  );
 
   const indexHtml = await readFile(resolve("index.html"), "utf-8");
   fastify.decorateReply("html", createHtmlFunction(indexHtml));
 
   async function loadClient() {
     const ssrManifest = resolve(clientDist, ".vite", "ssr-manifest.json");
+
+    const manifest: Manifest = JSON.parse(readFileSync(ssrManifest, "utf-8"));
+
     const serverInput = resolve(serverDist, "index.js");
 
     const module = await import(serverInput);
@@ -52,7 +59,7 @@ export default async function production(
       ? await options.prepareClient(module)
       : prepareClient(module);
 
-    return { client, ssrManifest };
+    return { client, manifest };
   }
 
   return client;

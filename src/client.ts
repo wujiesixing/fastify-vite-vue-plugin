@@ -2,12 +2,16 @@ import type { App } from "vue";
 import type { SSRContext } from "./route";
 import type { RouteNode } from "./routes";
 
+export type Manifest = Record<string, string[]>;
+
 export type CreateFunc = (
   ctx: SSRContext,
-  url: string
+  url: string,
+  manifest?: Manifest
 ) => {
   app: App<Element>;
   ctx: SSRContext;
+  preloadLinks?: string;
 };
 
 export interface Client {
