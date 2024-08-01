@@ -33,8 +33,8 @@ dependencies:
     specifier: ^1.9.15
     version: 1.9.15
   vite:
-    specifier: ^6.0.0-alpha.18
-    version: 6.0.0-alpha.18(@types/node@20.14.10)
+    specifier: ^6.0.0-alpha.19
+    version: 6.0.0-alpha.19(@types/node@20.14.10)
   vue:
     specifier: ^3.4.31
     version: 3.4.31(typescript@5.5.3)
@@ -1696,8 +1696,8 @@ packages:
       punycode: 2.3.1
     dev: false
 
-  /vite@6.0.0-alpha.18(@types/node@20.14.10):
-    resolution: {integrity: sha512-UFvwSPOjUiZR3x6G/LuxrM0hzKaxYUe6MTN6lu89NTEDgkWgFCNRP/5pyzUDEXZqtzEuq3bKrslb34VDZF+5Ig==}
+  /vite@6.0.0-alpha.19(@types/node@20.14.10):
+    resolution: {integrity: sha512-2V6xvCnK+JWOQlbNdNJ3f8slenE9PayJg0USD01gYemny7bAfP7RPJ4yuXIjZmx9LfGLHIQOIqJ3haEYw0/3ew==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:

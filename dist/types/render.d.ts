@@ -1,6 +1,7 @@
 import type { FastifyRequest } from "fastify";
 import type { Readable } from "stream";
-import type { CreateFunc, Manifest } from "./client";
+import type { CreateFunc } from "./client";
+import type { Manifest } from "./production";
 import type { SSRContext } from "./route";
 export interface RenderResponse {
     ctx: SSRContext;
@@ -13,4 +14,3 @@ export default function createRenderFunction({ create, manifest, }: {
     create: CreateFunc;
     manifest?: Manifest;
 }): Promise<RenderFunc>;
-export declare function renderPreloadLinks(modules: Set<string>, manifest: Manifest): string;

@@ -9,9 +9,10 @@ import createRenderFunction from "./render";
 import { resolve } from "./utils-node";
 
 import type { FastifyInstance } from "fastify";
-import type { Manifest } from "./client";
 import type { Options } from "./plugin";
 import type { ViteConfig } from "./resolveViteConfig";
+
+export type Manifest = Record<string, string[]>;
 
 export default async function production(
   fastify: FastifyInstance,

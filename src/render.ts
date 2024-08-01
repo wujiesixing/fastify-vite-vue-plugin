@@ -3,7 +3,8 @@ import { renderToNodeStream, renderToString } from "vue/server-renderer";
 import type { FastifyRequest } from "fastify";
 import { basename } from "path";
 import type { Readable } from "stream";
-import type { CreateFunc, Manifest } from "./client";
+import type { CreateFunc } from "./client";
+import type { Manifest } from "./production";
 import type { SSRContext } from "./route";
 
 export interface RenderResponse {
@@ -28,20 +29,16 @@ export default async function createRenderFunction({
     let preloadLinks = null;
 
     if (!request.ctx?.csr) {
-      const {
-        app,
-        ctx,
-        preloadLinks: pl,
-      } = await create(request.ctx, request.url, manifest);
-
-      if (pl) {
-        preloadLinks = pl;
-      }
+      const { app, ctx } = await create(request.ctx, request.url);
 
       if (request.ctx?.stream) {
         stream = renderToNodeStream(app, ctx);
       } else {
         body = await renderToString(app, ctx);
+      }
+
+      if (manifest) {
+        preloadLinks = renderPreloadLinks(ctx.modules, manifest);
       }
     }
 
@@ -49,7 +46,7 @@ export default async function createRenderFunction({
   };
 }
 
-export function renderPreloadLinks(modules: Set<string>, manifest: Manifest) {
+function renderPreloadLinks(modules: Set<string>, manifest: Manifest) {
   let links = "";
   const seen = new Set();
   modules.forEach((id) => {

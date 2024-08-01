@@ -7,15 +7,15 @@ async function createRenderFunction({ create, manifest, }) {
         let body = null;
         let preloadLinks = null;
         if (!request.ctx?.csr) {
-            const { app, ctx, preloadLinks: pl, } = await create(request.ctx, request.url, manifest);
-            if (pl) {
-                preloadLinks = pl;
-            }
+            const { app, ctx } = await create(request.ctx, request.url);
             if (request.ctx?.stream) {
                 stream = renderToNodeStream(app, ctx);
             }
             else {
                 body = await renderToString(app, ctx);
+            }
+            if (manifest) {
+                preloadLinks = renderPreloadLinks(ctx.modules, manifest);
             }
         }
         return { ctx: request.ctx, body, stream, preloadLinks };
@@ -78,4 +78,4 @@ function renderPreloadLink(file) {
     }
 }
 
-export { createRenderFunction as default, renderPreloadLinks };
+export { createRenderFunction as default };
