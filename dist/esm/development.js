@@ -1,5 +1,4 @@
 import { readFile } from 'node:fs/promises';
-import { pathToFileURL } from 'node:url';
 import middie from '@fastify/middie';
 import prepareClient from './client.js';
 import createHtmlFunction from './html.js';
@@ -27,7 +26,7 @@ async function development(fastify, options, viteConfig) {
     fastify.decorateReply("render", null);
     fastify.decorateReply("html", null);
     async function loadClient() {
-        const module = await runner.import(pathToFileURL(options.serverEntry).href);
+        const module = await runner.import(options.serverEntry);
         const client = options.prepareClient
             ? await options.prepareClient(module)
             : prepareClient(module);
