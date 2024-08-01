@@ -15,7 +15,7 @@ function createHtmlFunction(source) {
     // .split('<!-- element -->')
     const headTemplate = template.default(headSource);
     const footerTemplate = template.default(footerSource);
-    return async function ({ ctx, body, stream }) {
+    return async function ({ ctx, body, stream, preloadLinks }) {
         const head = unhead.createServerHead();
         if (ctx.head) {
             head.push(ctx.head);
@@ -27,6 +27,7 @@ function createHtmlFunction(source) {
             bodyAttrs,
             bodyTagsOpen,
             hydration: `<script>window.__INITIAL_CONTEXT__=${devalue.uneval(ctx)};</script>`,
+            preloadLinks,
         }), body ?? stream ?? "", footerTemplate({
             bodyTags,
         })));

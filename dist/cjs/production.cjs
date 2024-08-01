@@ -25,18 +25,19 @@ async function production(fastify, options, viteConfig) {
         root: utilsNode.resolve(clientDist, assetsDir),
         prefix: `/${assetsDir}/`,
     });
-    const { client: client$1 } = await loadClient();
-    fastify.decorateReply("render", await render.default(client$1));
+    const { client: client$1, manifest } = await loadClient();
+    fastify.decorateReply("render", await render.default({ ...client$1, manifest }));
     const indexHtml = await promises.readFile(utilsNode.resolve("index.html"), "utf-8");
     fastify.decorateReply("html", html.default(indexHtml));
     async function loadClient() {
         const ssrManifest = utilsNode.resolve(clientDist, ".vite", "ssr-manifest.json");
+        const manifest = JSON.parse(node_fs.readFileSync(ssrManifest, "utf-8"));
         const serverInput = utilsNode.resolve(serverDist, "index.js");
         const module = await import(serverInput);
         const client$1 = options.prepareClient
             ? await options.prepareClient(module)
             : client.default(module);
-        return { client: client$1, ssrManifest };
+        return { client: client$1, manifest };
     }
     return client$1;
 }
