@@ -3,6 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var process = require('node:process');
+var node_url = require('node:url');
 
 async function resolveViteConfig(configFile) {
     const { resolveConfig } = await import('vite');
@@ -12,10 +13,7 @@ async function resolveViteConfig(configFile) {
     const config = await resolveConfig({
         configFile,
     }, command, mode, process.env.NODE_ENV === "development" ? "development" : "production", isPreview);
-    if (process.platform === "win32") {
-        configFile = `file://${configFile}`;
-    }
-    let { default: userConfig } = await import(configFile);
+    let { default: userConfig } = await import(node_url.pathToFileURL(configFile).href);
     if (typeof userConfig === "function") {
         userConfig = userConfig({
             command,

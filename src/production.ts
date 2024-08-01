@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
+import { pathToFileURL } from "node:url";
 
 import fastifyStatic from "@fastify/static";
 
@@ -54,7 +55,7 @@ export default async function production(
 
     const serverInput = resolve(serverDist, "index.js");
 
-    const module = await import(serverInput);
+    const module = await import(pathToFileURL(serverInput).href);
 
     const client = options.prepareClient
       ? await options.prepareClient(module)

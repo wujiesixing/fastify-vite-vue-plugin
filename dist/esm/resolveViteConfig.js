@@ -1,4 +1,5 @@
 import process from 'node:process';
+import { pathToFileURL } from 'node:url';
 
 async function resolveViteConfig(configFile) {
     const { resolveConfig } = await import('vite');
@@ -8,10 +9,7 @@ async function resolveViteConfig(configFile) {
     const config = await resolveConfig({
         configFile,
     }, command, mode, process.env.NODE_ENV === "development" ? "development" : "production", isPreview);
-    if (process.platform === "win32") {
-        configFile = `file://${configFile}`;
-    }
-    let { default: userConfig } = await import(configFile);
+    let { default: userConfig } = await import(pathToFileURL(configFile).href);
     if (typeof userConfig === "function") {
         userConfig = userConfig({
             command,

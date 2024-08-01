@@ -3,6 +3,7 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var promises = require('node:fs/promises');
+var node_url = require('node:url');
 var middie = require('@fastify/middie');
 var client = require('./client.cjs');
 var html = require('./html.cjs');
@@ -30,7 +31,7 @@ async function development(fastify, options, viteConfig) {
     fastify.decorateReply("render", null);
     fastify.decorateReply("html", null);
     async function loadClient() {
-        const module = await runner.import(options.serverEntry);
+        const module = await runner.import(node_url.pathToFileURL(options.serverEntry).href);
         const client$1 = options.prepareClient
             ? await options.prepareClient(module)
             : client.default(module);

@@ -1,5 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
 import fastifyStatic from '@fastify/static';
 import prepareClient from './client.js';
 import createHtmlFunction from './html.js';
@@ -29,7 +30,7 @@ async function production(fastify, options, viteConfig) {
         const ssrManifest = resolve(clientDist, ".vite", "ssr-manifest.json");
         const manifest = JSON.parse(readFileSync(ssrManifest, "utf-8"));
         const serverInput = resolve(serverDist, "index.js");
-        const module = await import(serverInput);
+        const module = await import(pathToFileURL(serverInput).href);
         const client = options.prepareClient
             ? await options.prepareClient(module)
             : prepareClient(module);

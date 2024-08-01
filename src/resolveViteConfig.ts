@@ -1,4 +1,5 @@
 import process from "node:process";
+import { pathToFileURL } from "node:url";
 
 import type { UserConfig } from "vite";
 
@@ -31,11 +32,7 @@ export default async function resolveViteConfig(
     isPreview
   );
 
-  if (process.platform === "win32") {
-    configFile = `file://${configFile}`;
-  }
-
-  let { default: userConfig } = await import(configFile);
+  let { default: userConfig } = await import(pathToFileURL(configFile).href);
 
   if (typeof userConfig === "function") {
     userConfig = userConfig({

@@ -4,6 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var node_fs = require('node:fs');
 var promises = require('node:fs/promises');
+var node_url = require('node:url');
 var fastifyStatic = require('@fastify/static');
 var client = require('./client.cjs');
 var html = require('./html.cjs');
@@ -33,7 +34,7 @@ async function production(fastify, options, viteConfig) {
         const ssrManifest = utilsNode.resolve(clientDist, ".vite", "ssr-manifest.json");
         const manifest = JSON.parse(node_fs.readFileSync(ssrManifest, "utf-8"));
         const serverInput = utilsNode.resolve(serverDist, "index.js");
-        const module = await import(serverInput);
+        const module = await import(node_url.pathToFileURL(serverInput).href);
         const client$1 = options.prepareClient
             ? await options.prepareClient(module)
             : client.default(module);
