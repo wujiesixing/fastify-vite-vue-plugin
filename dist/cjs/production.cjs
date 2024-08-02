@@ -28,7 +28,7 @@ async function production(fastify, options, viteConfig) {
     });
     const { client: client$1, manifest } = await loadClient();
     fastify.decorateReply("render", await render.default({ ...client$1, manifest }));
-    const indexHtml = await promises.readFile(utilsNode.resolve("index.html"), "utf-8");
+    const indexHtml = await promises.readFile(utilsNode.resolve(clientDist, "index.html"), "utf-8");
     fastify.decorateReply("html", html.default(indexHtml));
     async function loadClient() {
         const ssrManifest = utilsNode.resolve(clientDist, ".vite", "ssr-manifest.json");

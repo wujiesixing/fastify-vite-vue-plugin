@@ -45,7 +45,7 @@ export default async function production(
     await createRenderFunction({ ...client, manifest })
   );
 
-  const indexHtml = await readFile(resolve("index.html"), "utf-8");
+  const indexHtml = await readFile(resolve(clientDist, "index.html"), "utf-8");
   fastify.decorateReply("html", createHtmlFunction(indexHtml));
 
   async function loadClient() {
