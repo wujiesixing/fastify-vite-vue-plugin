@@ -1,6 +1,6 @@
 {
   "name": "fastify-vite-vue-plugin",
-  "version": "0.5.5",
+  "version": "0.6.0",
   "description": "",
   "type": "module",
   "main": "dist/cjs/index.cjs",
@@ -24,6 +24,10 @@
   "scripts": {
     "build": "rollup --config rollup.config.ts --configPlugin typescript",
     "test": "rollup --config rollup.config.ts --configPlugin typescript --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wujiesixing/fastify-vite-vue-plugin.git"
   },
   "keywords": [
     "fastify",
