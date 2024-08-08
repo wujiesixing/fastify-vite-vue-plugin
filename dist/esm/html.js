@@ -27,7 +27,7 @@ function createHtmlFunction(source) {
         }), body ?? stream ?? "", footerTemplate({
             bodyTags,
         })));
-        this.type("text/html");
+        this.type("text/html;charset=utf-8");
         this.send(readable);
     };
 }

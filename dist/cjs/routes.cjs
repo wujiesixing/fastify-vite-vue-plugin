@@ -57,7 +57,7 @@ function getRoutes(array, base) {
             throw new Error(`类型检测不通过：${JSON.stringify(route)}`);
         });
     }
-    return utilsBrowser.deepFreeze(_getRoutes(array, base));
+    return _getRoutes(array, base);
 }
 function flatRoutes(array, base) {
     const paths = [];

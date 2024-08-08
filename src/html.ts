@@ -51,7 +51,7 @@ export default function createHtmlFunction(source: string): HtmlFunc {
       )
     );
 
-    this.type("text/html");
+    this.type("text/html;charset=utf-8");
     this.send(readable);
   };
 }

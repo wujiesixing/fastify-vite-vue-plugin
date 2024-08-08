@@ -152,7 +152,7 @@ export function getRoutes(
     });
   }
 
-  return deepFreeze(_getRoutes(array, base));
+  return _getRoutes(array, base);
 }
 
 export function flatRoutes(

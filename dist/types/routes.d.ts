@@ -53,7 +53,7 @@ export interface RouteNode extends Omit<RouteBase, "component" | "meta" | "child
 export declare function getRoutes(array: readonly RouteBase[], base?: {
     path: string;
     meta?: Omit<RouteMetaBase, "provide">;
-}): readonly RouteRecordRaw[];
+}): RouteRecordRaw[];
 export declare function flatRoutes(array: readonly RouteBase[], base?: {
     path: string;
     meta?: Omit<RouteMetaBase, "provide">;
