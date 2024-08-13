@@ -4,6 +4,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 var node_fs = require('node:fs');
 var promises = require('node:fs/promises');
+var node_path = require('node:path');
 var node_url = require('node:url');
 var fastifyStatic = require('@fastify/static');
 var client = require('./client.cjs');
@@ -22,18 +23,32 @@ async function production(fastify, options, viteConfig) {
     if (!node_fs.existsSync(serverDist)) {
         throw new Error("没有发现客户端的包，请执行 pnpm run build:server");
     }
+    fastify.addHook("onRequest", async (request, reply) => {
+        const { url } = request;
+        const matches = url.match(/^\/+([^\/?#]+)/);
+        if (matches) {
+            const firstPath = matches[1]?.toLowerCase();
+            if (/index\.html(\.br|\.gz)?/.test(firstPath)) {
+                reply.code(302).redirect(url.replace(firstPath, ""));
+                return;
+            }
+        }
+    });
     fastify.register(fastifyStatic, {
-        root: utilsNode.resolve(clientDist, assetsDir),
-        prefix: `/${assetsDir}/`,
+        root: utilsNode.resolve(clientDist),
+        prefix: `/`,
+        preCompressed: true,
+        wildcard: false,
+        index: false,
     });
     const { client: client$1, manifest } = await loadClient();
     fastify.decorateReply("render", await render.default({ ...client$1, manifest }));
-    const indexHtml = await promises.readFile(utilsNode.resolve(clientDist, "index.html"), "utf-8");
+    const indexHtml = await promises.readFile(node_path.join(clientDist, "index.html"), "utf-8");
     fastify.decorateReply("html", html.default(indexHtml));
     async function loadClient() {
-        const ssrManifest = utilsNode.resolve(clientDist, ".vite", "ssr-manifest.json");
+        const ssrManifest = node_path.join(clientDist, ".vite", "ssr-manifest.json");
         const manifest = JSON.parse(node_fs.readFileSync(ssrManifest, "utf-8"));
-        const serverInput = utilsNode.resolve(serverDist, "index.js");
+        const serverInput = node_path.join(serverDist, "index.js");
         const module = await import(node_url.pathToFileURL(serverInput).href);
         const client$1 = options.prepareClient
             ? await options.prepareClient(module)
