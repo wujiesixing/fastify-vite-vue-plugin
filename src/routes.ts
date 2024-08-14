@@ -57,6 +57,7 @@ interface RouteMetaBase {
  */
 export interface RouteBase {
   path: string;
+  name?: string;
   component?: RouteComponent | Lazy<RouteComponent>;
   meta?: RouteMetaBase;
   redirect?: string;
@@ -96,10 +97,10 @@ export function getRoutes(
     }
   ) {
     return _array.map((route): RouteRecordRaw => {
-      let { path, meta } = route;
+      let { path, meta, name } = route;
       const { component, redirect, children } = route;
 
-      const name = getFullPath(path, _base?.path);
+      name = name || getFullPath(path, _base?.path);
 
       if (names.includes(name)) {
         throw new Error(

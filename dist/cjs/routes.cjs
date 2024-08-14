@@ -16,9 +16,9 @@ function getRoutes(array, base) {
     const names = [];
     function _getRoutes(_array, _base) {
         return _array.map((route) => {
-            let { path, meta } = route;
+            let { path, meta, name } = route;
             const { component, redirect, children } = route;
-            const name = getFullPath(path, _base?.path);
+            name = name || getFullPath(path, _base?.path);
             if (names.includes(name)) {
                 throw new Error(`自动生成 name （${name}）失败，请检查路由配置是否正确：${JSON.stringify(route)}`);
             }

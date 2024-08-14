@@ -43,6 +43,7 @@ interface RouteMetaBase {
  */
 export interface RouteBase {
     path: string;
+    name?: string;
     component?: RouteComponent | Lazy<RouteComponent>;
     meta?: RouteMetaBase;
     redirect?: string;
