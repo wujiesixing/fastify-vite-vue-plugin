@@ -10,21 +10,14 @@ var render = require('./render.cjs');
 var utilsNode = require('./utils-node.cjs');
 
 async function development(fastify, options, viteConfig) {
-    const { createNodeDevEnvironment, createServer, createServerModuleRunner, mergeConfig, } = await import('vite');
+    const { createServer, createServerModuleRunner, mergeConfig } = await import('vite');
     const config = mergeConfig({
         configFile: false,
         server: { middlewareMode: true },
         appType: "custom",
-        environments: {
-            node: {
-                dev: {
-                    createEnvironment: createNodeDevEnvironment,
-                },
-            },
-        },
     }, viteConfig);
     const server = await createServer(config);
-    const runner = await createServerModuleRunner(server.environments.node);
+    const runner = await createServerModuleRunner(server.environments.ssr);
     await fastify.register(middie);
     fastify.use(server.middlewares);
     fastify.decorateReply("render", null);

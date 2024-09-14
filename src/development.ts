@@ -16,32 +16,22 @@ export default async function development(
   options: Options,
   viteConfig: ViteConfig
 ) {
-  const {
-    createNodeDevEnvironment,
-    createServer,
-    createServerModuleRunner,
-    mergeConfig,
-  } = await import("vite");
+  const { createServer, createServerModuleRunner, mergeConfig } = await import(
+    "vite"
+  );
 
   const config = mergeConfig(
     {
       configFile: false,
       server: { middlewareMode: true },
       appType: "custom",
-      environments: {
-        node: {
-          dev: {
-            createEnvironment: createNodeDevEnvironment,
-          },
-        },
-      },
     },
     viteConfig
   );
 
   const server = await createServer(config);
 
-  const runner = await createServerModuleRunner(server.environments.node);
+  const runner = await createServerModuleRunner(server.environments.ssr);
 
   await fastify.register(middie);
   fastify.use(server.middlewares);
