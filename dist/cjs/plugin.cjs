@@ -9,7 +9,9 @@ var resolveViteConfig = require('./resolveViteConfig.cjs');
 var route = require('./route.cjs');
 
 var plugin = plugin$1(async function (fastify, options) {
-    const viteConfig = await resolveViteConfig.default(options.viteConfig);
+    const viteConfig = typeof options.viteConfig === "string"
+        ? await resolveViteConfig.default(options.viteConfig)
+        : options.viteConfig;
     const { routes } = process.env.NODE_ENV === "development"
         ? await development.default(fastify, options, viteConfig)
         : await production.default(fastify, options, viteConfig);

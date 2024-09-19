@@ -6,16 +6,20 @@ import resolveViteConfig from "./resolveViteConfig";
 import { createRoute, createRouteHandler } from "./route";
 
 import type { Client } from "./client";
+import type { ViteConfig } from "./resolveViteConfig";
 
 export interface Options {
-  viteConfig: string;
+  viteConfig: string | ViteConfig;
   serverEntry: string;
   prepareClient?: (...args: any[]) => Promise<Client>;
 }
 
 export default plugin(
   async function (fastify, options: Options) {
-    const viteConfig = await resolveViteConfig(options.viteConfig);
+    const viteConfig =
+      typeof options.viteConfig === "string"
+        ? await resolveViteConfig(options.viteConfig)
+        : options.viteConfig;
 
     const { routes } =
       process.env.NODE_ENV === "development"

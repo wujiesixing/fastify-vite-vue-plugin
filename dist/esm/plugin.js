@@ -5,7 +5,9 @@ import resolveViteConfig from './resolveViteConfig.js';
 import { createRoute, createRouteHandler } from './route.js';
 
 var plugin = plugin$1(async function (fastify, options) {
-    const viteConfig = await resolveViteConfig(options.viteConfig);
+    const viteConfig = typeof options.viteConfig === "string"
+        ? await resolveViteConfig(options.viteConfig)
+        : options.viteConfig;
     const { routes } = process.env.NODE_ENV === "development"
         ? await development(fastify, options, viteConfig)
         : await production(fastify, options, viteConfig);

@@ -1,6 +1,7 @@
 import type { Client } from "./client";
+import type { ViteConfig } from "./resolveViteConfig";
 export interface Options {
-    viteConfig: string;
+    viteConfig: string | ViteConfig;
     serverEntry: string;
     prepareClient?: (...args: any[]) => Promise<Client>;
 }
