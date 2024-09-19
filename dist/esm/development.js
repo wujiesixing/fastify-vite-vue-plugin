@@ -3,11 +3,14 @@ import middie from '@fastify/middie';
 import prepareClient from './client.js';
 import createHtmlFunction from './html.js';
 import createRenderFunction from './render.js';
+import resolveViteConfig from './resolveViteConfig.js';
 import { resolve } from './utils-node.js';
 
-async function development(fastify, options, viteConfig) {
+async function development(fastify, options) {
     const { createServer, createServerModuleRunner, mergeConfig } = await import('vite');
+    const viteConfig = await resolveViteConfig(options.server.viteConfig);
     const config = mergeConfig({
+        root: options.root,
         configFile: false,
         server: { middlewareMode: true },
         appType: "custom",
@@ -19,7 +22,7 @@ async function development(fastify, options, viteConfig) {
     fastify.decorateReply("render", null);
     fastify.decorateReply("html", null);
     async function loadClient() {
-        const module = await runner.import(options.serverEntry);
+        const module = await runner.import(options.server.entry);
         const client = options.prepareClient
             ? await options.prepareClient(module)
             : prepareClient(module);

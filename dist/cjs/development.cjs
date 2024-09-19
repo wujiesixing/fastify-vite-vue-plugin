@@ -7,11 +7,14 @@ var middie = require('@fastify/middie');
 var client = require('./client.cjs');
 var html = require('./html.cjs');
 var render = require('./render.cjs');
+var resolveViteConfig = require('./resolveViteConfig.cjs');
 var utilsNode = require('./utils-node.cjs');
 
-async function development(fastify, options, viteConfig) {
+async function development(fastify, options) {
     const { createServer, createServerModuleRunner, mergeConfig } = await import('vite');
+    const viteConfig = await resolveViteConfig.default(options.server.viteConfig);
     const config = mergeConfig({
+        root: options.root,
         configFile: false,
         server: { middlewareMode: true },
         appType: "custom",
@@ -23,7 +26,7 @@ async function development(fastify, options, viteConfig) {
     fastify.decorateReply("render", null);
     fastify.decorateReply("html", null);
     async function loadClient() {
-        const module = await runner.import(options.serverEntry);
+        const module = await runner.import(options.server.entry);
         const client$1 = options.prepareClient
             ? await options.prepareClient(module)
             : client.default(module);

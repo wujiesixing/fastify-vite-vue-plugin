@@ -5,23 +5,25 @@ import middie from "@fastify/middie";
 import prepareClient from "./client";
 import createHtmlFunction from "./html";
 import createRenderFunction from "./render";
+import resolveViteConfig from "./resolveViteConfig";
 import { resolve } from "./utils-node";
 
 import type { FastifyInstance } from "fastify";
 import type { Options } from "./plugin";
-import type { ViteConfig } from "./resolveViteConfig";
 
 export default async function development(
   fastify: FastifyInstance,
-  options: Options,
-  viteConfig: ViteConfig
+  options: Options
 ) {
   const { createServer, createServerModuleRunner, mergeConfig } = await import(
     "vite"
   );
 
+  const viteConfig = await resolveViteConfig(options.server.viteConfig);
+
   const config = mergeConfig(
     {
+      root: options.root,
       configFile: false,
       server: { middlewareMode: true },
       appType: "custom",
@@ -40,7 +42,7 @@ export default async function development(
   fastify.decorateReply("html", null);
 
   async function loadClient() {
-    const module = await runner.import(options.serverEntry);
+    const module = await runner.import(options.server.entry);
 
     const client = options.prepareClient
       ? await options.prepareClient(module)

@@ -3,34 +3,12 @@ import { pathToFileURL } from "node:url";
 
 import type { UserConfig } from "vite";
 
-export type ViteConfig = Omit<UserConfig, "root" | "mode" | "build"> & {
-  root: string;
-  mode: "development" | "production";
-  build: {
-    assetsDir: string;
-    outDir: string;
-  };
-};
-
 export default async function resolveViteConfig(
   configFile: string
-): Promise<ViteConfig> {
-  const { resolveConfig } = await import("vite");
-
+): Promise<UserConfig> {
   const command = process.env.NODE_ENV === "development" ? "serve" : "build";
   const mode =
     process.env.NODE_ENV === "development" ? "development" : "production";
-  const isPreview = false;
-
-  const config = await resolveConfig(
-    {
-      configFile,
-    },
-    command,
-    mode,
-    process.env.NODE_ENV === "development" ? "development" : "production",
-    isPreview
-  );
 
   let { default: userConfig } = await import(pathToFileURL(configFile).href);
 
@@ -39,16 +17,9 @@ export default async function resolveViteConfig(
       command,
       mode,
       isSsrBuild: true,
-      isPreview,
+      isPreview: false,
     });
   }
 
-  return Object.assign(userConfig, {
-    root: config.root,
-    mode,
-    build: {
-      assetsDir: config.build.assetsDir,
-      outDir: config.build.outDir,
-    },
-  });
+  return userConfig;
 }

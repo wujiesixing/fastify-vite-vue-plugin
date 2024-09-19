@@ -12,14 +12,14 @@ var html = require('./html.cjs');
 var render = require('./render.cjs');
 var utilsNode = require('./utils-node.cjs');
 
-async function production(fastify, options, viteConfig) {
-    const { root, build } = viteConfig;
-    const { outDir, assetsDir } = build;
-    const clientDist = utilsNode.resolve(root, outDir, "client");
+async function production(fastify, options) {
+    const { root, build } = options;
+    const { outDir } = build;
+    const clientDist = utilsNode.resolve(root, outDir.client);
     if (!node_fs.existsSync(clientDist)) {
         throw new Error("没有发现客户端的包，请执行 pnpm run build:client");
     }
-    const serverDist = utilsNode.resolve(root, outDir, "server");
+    const serverDist = utilsNode.resolve(root, outDir.server);
     if (!node_fs.existsSync(serverDist)) {
         throw new Error("没有发现客户端的包，请执行 pnpm run build:server");
     }

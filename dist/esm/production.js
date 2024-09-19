@@ -8,14 +8,14 @@ import createHtmlFunction from './html.js';
 import createRenderFunction from './render.js';
 import { resolve } from './utils-node.js';
 
-async function production(fastify, options, viteConfig) {
-    const { root, build } = viteConfig;
-    const { outDir, assetsDir } = build;
-    const clientDist = resolve(root, outDir, "client");
+async function production(fastify, options) {
+    const { root, build } = options;
+    const { outDir } = build;
+    const clientDist = resolve(root, outDir.client);
     if (!existsSync(clientDist)) {
         throw new Error("没有发现客户端的包，请执行 pnpm run build:client");
     }
-    const serverDist = resolve(root, outDir, "server");
+    const serverDist = resolve(root, outDir.server);
     if (!existsSync(serverDist)) {
         throw new Error("没有发现客户端的包，请执行 pnpm run build:server");
     }

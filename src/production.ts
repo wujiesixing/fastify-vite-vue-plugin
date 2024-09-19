@@ -12,25 +12,22 @@ import { resolve } from "./utils-node";
 
 import type { FastifyInstance } from "fastify";
 import type { Options } from "./plugin";
-import type { ViteConfig } from "./resolveViteConfig";
 
 export type Manifest = Record<string, string[]>;
 
 export default async function production(
   fastify: FastifyInstance,
-  options: Options,
-  viteConfig: ViteConfig
+  options: Options
 ) {
-  const { root, build } = viteConfig;
+  const { root, build } = options;
+  const { outDir } = build;
 
-  const { outDir, assetsDir } = build;
-
-  const clientDist = resolve(root, outDir, "client");
+  const clientDist = resolve(root, outDir.client);
   if (!existsSync(clientDist)) {
     throw new Error("没有发现客户端的包，请执行 pnpm run build:client");
   }
 
-  const serverDist = resolve(root, outDir, "server");
+  const serverDist = resolve(root, outDir.server);
   if (!existsSync(serverDist)) {
     throw new Error("没有发现客户端的包，请执行 pnpm run build:server");
   }
