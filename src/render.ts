@@ -1,7 +1,8 @@
+import { basename } from "node:path";
+
 import { renderToNodeStream, renderToString } from "vue/server-renderer";
 
 import type { FastifyRequest } from "fastify";
-import { basename } from "path";
 import type { Readable } from "stream";
 import type { CreateFunc } from "./client";
 import type { Manifest } from "./production";
@@ -71,26 +72,30 @@ function renderPreloadLinks(modules: Set<string>, manifest: Manifest) {
 }
 
 function renderPreloadLink(file: string) {
-  if (file.endsWith(".js")) {
-    return `<link rel="modulepreload" crossorigin href="${file}">`;
-  } else if (file.endsWith(".css")) {
+  if (file.endsWith(".css")) {
     return `<link rel="stylesheet" href="${file}">`;
-  } else if (file.endsWith(".otf")) {
-    return ` <link rel="preload" href="${file}" as="font" type="font/opentype" crossorigin>`;
-  } else if (file.endsWith(".woff")) {
-    return ` <link rel="preload" href="${file}" as="font" type="font/woff" crossorigin>`;
-  } else if (file.endsWith(".woff2")) {
-    return ` <link rel="preload" href="${file}" as="font" type="font/woff2" crossorigin>`;
-  } else if (file.endsWith(".gif")) {
-    return ` <link rel="preload" href="${file}" as="image" type="image/gif">`;
-  } else if (file.endsWith(".jpg") || file.endsWith(".jpeg")) {
-    return ` <link rel="preload" href="${file}" as="image" type="image/jpeg">`;
-  } else if (file.endsWith(".png")) {
-    return ` <link rel="preload" href="${file}" as="image" type="image/png">`;
-  } else if (file.endsWith(".svg")) {
-    return ` <link rel="preload" href="${file}" as="image" type="image/svg">`;
-  } else {
-    // TODO
-    return "";
   }
+  return "";
+  // if (file.endsWith(".js") && !file.includes("-legacy")) {
+  //   return `<link rel="modulepreload" crossorigin href="${file}">`;
+  // } else if (file.endsWith(".css")) {
+  //   return `<link rel="stylesheet" href="${file}">`;
+  // } else if (file.endsWith(".otf")) {
+  //   return ` <link rel="preload" href="${file}" as="font" type="font/opentype" crossorigin>`;
+  // } else if (file.endsWith(".woff")) {
+  //   return ` <link rel="preload" href="${file}" as="font" type="font/woff" crossorigin>`;
+  // } else if (file.endsWith(".woff2")) {
+  //   return ` <link rel="preload" href="${file}" as="font" type="font/woff2" crossorigin>`;
+  // } else if (file.endsWith(".gif")) {
+  //   return ` <link rel="preload" href="${file}" as="image" type="image/gif">`;
+  // } else if (file.endsWith(".jpg") || file.endsWith(".jpeg")) {
+  //   return ` <link rel="preload" href="${file}" as="image" type="image/jpeg">`;
+  // } else if (file.endsWith(".png")) {
+  //   return ` <link rel="preload" href="${file}" as="image" type="image/png">`;
+  // } else if (file.endsWith(".svg")) {
+  //   return ` <link rel="preload" href="${file}" as="image" type="image/svg">`;
+  // } else {
+  //   // TODO
+  //   return "";
+  // }
 }
