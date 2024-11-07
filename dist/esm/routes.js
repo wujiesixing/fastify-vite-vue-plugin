@@ -1,6 +1,9 @@
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
 import { defaultsDeep, omit, isNil } from 'lodash-es';
-import { deepFreeze } from './utils-browser.js';
+import { deepFreeze } from './utils.js';
 
+dayjs.extend(utc);
 function formatPath(path) {
     return path.replace(/\/+/g, "/").replace(/(?!^)\/$/, "");
 }
@@ -11,9 +14,21 @@ function getFullPath(path, base = "") {
     return formatPath("/" + base + "/" + path);
 }
 function getRoutes(array, base) {
+    const nowUtc = dayjs().utc();
     const names = [];
     function _getRoutes(_array, _base) {
-        return _array.map((route) => {
+        return _array
+            .filter(({ meta = {} }) => {
+            const { startTime, endTime } = meta;
+            if (startTime && nowUtc < dayjs(startTime).utc()) {
+                return false;
+            }
+            if (endTime && nowUtc >= dayjs(endTime).utc()) {
+                return false;
+            }
+            return true;
+        })
+            .map((route) => {
             let { path, meta, name } = route;
             const { component, redirect, children } = route;
             name = name || getFullPath(path, _base?.path);

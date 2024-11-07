@@ -10,16 +10,16 @@ var fastifyStatic = require('@fastify/static');
 var client = require('./client.cjs');
 var html = require('./html.cjs');
 var render = require('./render.cjs');
-var utilsNode = require('./utils-node.cjs');
+var utils = require('./utils.cjs');
 
 async function production(fastify, options) {
     const { root, build } = options;
     const { outDir } = build;
-    const clientDist = utilsNode.resolve(root, outDir.client);
+    const clientDist = utils.resolve(root, outDir.client);
     if (!node_fs.existsSync(clientDist)) {
         throw new Error("没有发现客户端的包，请执行 pnpm run build:client");
     }
-    const serverDist = utilsNode.resolve(root, outDir.server);
+    const serverDist = utils.resolve(root, outDir.server);
     if (!node_fs.existsSync(serverDist)) {
         throw new Error("没有发现客户端的包，请执行 pnpm run build:server");
     }
@@ -35,7 +35,7 @@ async function production(fastify, options) {
         }
     });
     fastify.register(fastifyStatic, {
-        root: utilsNode.resolve(clientDist),
+        root: utils.resolve(clientDist),
         prefix: `/`,
         preCompressed: true,
         wildcard: false,

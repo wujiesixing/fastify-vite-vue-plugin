@@ -1,6 +1,6 @@
 import { omit } from 'lodash-es';
 
-function createRoute(fastify, route, handler) {
+function createRoute(fastify, route, routes, handler) {
     fastify.get(route.path, {
         async onRequest(request, reply) {
             if (route.redirect) {
@@ -11,6 +11,7 @@ function createRoute(fastify, route, handler) {
                 ...route.render,
                 ...omit(route, ["render"]),
                 hostname: request.hostname,
+                routes: routes(),
                 url: request.url,
                 firstRender: true,
                 state: null,

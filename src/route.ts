@@ -6,14 +6,16 @@ import type {
   FastifyRequest,
   RouteHandlerMethod,
 } from "fastify";
+import type { RouteRecordRaw } from "vue-router";
 import type { SSRContext as VueSSRContext } from "vue/server-renderer";
-import type { RenderOptions, RouteNode } from "./routes";
+import type { RenderOptions, RouteServer } from "./routes";
 
 export interface SSRContext
   extends VueSSRContext,
     RenderOptions,
-    Omit<RouteNode, "render"> {
+    Omit<RouteServer, "render"> {
   hostname: string;
+  routes: RouteRecordRaw[];
   url: string;
   firstRender: boolean;
   state: null | Record<string, any>;
@@ -32,7 +34,8 @@ export interface SSRContext
 
 export function createRoute(
   fastify: FastifyInstance,
-  route: RouteNode,
+  route: RouteServer,
+  routes: () => RouteRecordRaw[],
   handler: RouteHandlerMethod
 ) {
   fastify.get(route.path, {
@@ -46,6 +49,7 @@ export function createRoute(
         ...route.render,
         ...omit(route, ["render"]),
         hostname: request.hostname,
+        routes: routes(),
         url: request.url,
         firstRender: true,
         state: null,

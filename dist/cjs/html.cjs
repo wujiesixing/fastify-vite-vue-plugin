@@ -7,7 +7,7 @@ var ssr = require('@unhead/ssr');
 var devalue = require('devalue');
 var unhead = require('unhead');
 var template = require('./template.cjs');
-var utilsNode = require('./utils-node.cjs');
+var utils = require('./utils.cjs');
 
 function createHtmlFunction(source) {
     const [headSource, footerSource] = source.split("<!-- element -->");
@@ -21,7 +21,7 @@ function createHtmlFunction(source) {
             head.push(ctx.head);
         }
         const { headTags, bodyTags, bodyTagsOpen, htmlAttrs, bodyAttrs } = await ssr.renderSSRHead(head);
-        const readable = node_stream.Readable.from(utilsNode.generateStream(headTemplate({
+        const readable = node_stream.Readable.from(utils.generateStream(headTemplate({
             htmlAttrs,
             headTags,
             bodyAttrs,

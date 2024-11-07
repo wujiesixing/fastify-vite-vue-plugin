@@ -28,8 +28,8 @@ export default plugin(
         ? await development(fastify, options)
         : await production(fastify, options);
 
-    for (const route of routes) {
-      createRoute(fastify, route, createRouteHandler());
+    for (const route of routes.server) {
+      createRoute(fastify, route, routes.client, createRouteHandler());
     }
   },
   {

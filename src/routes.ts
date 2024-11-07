@@ -1,6 +1,8 @@
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { defaultsDeep, isNil, omit } from "lodash-es";
 
-import { deepFreeze } from "./utils-browser";
+import { deepFreeze } from "./utils";
 
 import type { Head } from "@unhead/schema";
 import type {
@@ -10,6 +12,8 @@ import type {
   RouteRecordSingleView,
   RouteRecordSingleViewWithChildren,
 } from "vue-router";
+
+dayjs.extend(utc);
 
 type Lazy<T> = () => Promise<T>;
 
@@ -48,6 +52,8 @@ export interface RenderOptions {
 interface RouteMetaBase {
   head?: Head;
   render?: RenderOptions;
+  startTime?: dayjs.ConfigType;
+  endTime?: dayjs.ConfigType;
   provide?: Omit<RouteMetaBase, "provide">;
 }
 
@@ -64,7 +70,7 @@ export interface RouteBase {
   children?: RouteBase[];
 }
 
-export interface RouteNode
+export interface RouteServer
   extends Omit<RouteBase, "component" | "meta" | "children">,
     Omit<RouteMetaBase, "provide"> {}
 
@@ -87,6 +93,8 @@ export function getRoutes(
     meta?: Omit<RouteMetaBase, "provide">;
   }
 ) {
+  const nowUtc = dayjs().utc();
+
   const names: string[] = [];
 
   function _getRoutes(
@@ -96,61 +104,72 @@ export function getRoutes(
       meta?: Omit<RouteMetaBase, "provide">;
     }
   ) {
-    return _array.map((route): RouteRecordRaw => {
-      let { path, meta, name } = route;
-      const { component, redirect, children } = route;
+    return _array
+      .filter(({ meta = {} }) => {
+        const { startTime, endTime } = meta;
+        if (startTime && nowUtc < dayjs(startTime).utc()) {
+          return false;
+        }
+        if (endTime && nowUtc >= dayjs(endTime).utc()) {
+          return false;
+        }
+        return true;
+      })
+      .map((route): RouteRecordRaw => {
+        let { path, meta, name } = route;
+        const { component, redirect, children } = route;
 
-      name = name || getFullPath(path, _base?.path);
+        name = name || getFullPath(path, _base?.path);
 
-      if (names.includes(name)) {
-        throw new Error(
-          `自动生成 name （${name}）失败，请检查路由配置是否正确：${JSON.stringify(
-            route
-          )}`
-        );
-      }
+        if (names.includes(name)) {
+          throw new Error(
+            `自动生成 name （${name}）失败，请检查路由配置是否正确：${JSON.stringify(
+              route
+            )}`
+          );
+        }
 
-      names.push(name);
+        names.push(name);
 
-      path = formatPath(path);
+        path = formatPath(path);
 
-      const provide = defaultsDeep({}, meta?.provide, _base?.meta);
+        const provide = defaultsDeep({}, meta?.provide, _base?.meta);
 
-      meta = defaultsDeep({}, omit(meta, ["provide"]), provide);
+        meta = defaultsDeep({}, omit(meta, ["provide"]), provide);
 
-      if (component && isNil(redirect) && isNil(children)) {
-        return {
-          ...route,
-          meta,
-          name,
-          path,
-        } as RouteRecordSingleView;
-      }
+        if (component && isNil(redirect) && isNil(children)) {
+          return {
+            ...route,
+            meta,
+            name,
+            path,
+          } as RouteRecordSingleView;
+        }
 
-      if (children) {
-        return {
-          ...route,
-          children: _getRoutes(children, {
-            path: name,
-            meta: provide,
-          }),
-          meta,
-          name,
-          path,
-        } as RouteRecordSingleViewWithChildren;
-      }
+        if (children) {
+          return {
+            ...route,
+            children: _getRoutes(children, {
+              path: name,
+              meta: provide,
+            }),
+            meta,
+            name,
+            path,
+          } as RouteRecordSingleViewWithChildren;
+        }
 
-      if (redirect && isNil(component)) {
-        return {
-          ...route,
-          meta,
-          name,
-          path,
-        } as RouteRecordRedirect;
-      }
+        if (redirect && isNil(component)) {
+          return {
+            ...route,
+            meta,
+            name,
+            path,
+          } as RouteRecordRedirect;
+        }
 
-      throw new Error(`类型检测不通过：${JSON.stringify(route)}`);
-    });
+        throw new Error(`类型检测不通过：${JSON.stringify(route)}`);
+      });
   }
 
   return _getRoutes(array, base);
@@ -172,7 +191,7 @@ export function flatRoutes(
       meta?: Omit<RouteMetaBase, "provide">;
     }
   ) {
-    return _array.flatMap((route): RouteNode[] => {
+    return _array.flatMap((route): RouteServer[] => {
       let { meta } = route;
       const { path, component, redirect, children } = route;
 
@@ -182,7 +201,7 @@ export function flatRoutes(
 
       meta = defaultsDeep({}, omit(meta, ["provide"]), provide);
 
-      let currentRoute: RouteNode | null = null;
+      let currentRoute: RouteServer | null = null;
 
       if (component || redirect) {
         if (paths.includes(fullPath)) {

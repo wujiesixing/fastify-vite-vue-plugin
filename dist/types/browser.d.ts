@@ -1,1 +1,0 @@
-export { getRoutes } from "./routes";

@@ -11,7 +11,7 @@ async function createRenderFunction({ create, manifest, }) {
         let body = null;
         let preloadLinks = null;
         if (!request.ctx?.csr) {
-            const { app, ctx } = await create(request.ctx, request.url);
+            const { app, ctx } = await create(request.ctx);
             if (request.ctx?.stream) {
                 stream = serverRenderer.renderToNodeStream(app, ctx);
             }

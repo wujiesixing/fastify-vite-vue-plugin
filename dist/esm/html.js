@@ -3,7 +3,7 @@ import { renderSSRHead } from '@unhead/ssr';
 import { uneval } from 'devalue';
 import { createServerHead } from 'unhead';
 import createTemplateFunction from './template.js';
-import { generateStream } from './utils-node.js';
+import { generateStream } from './utils.js';
 
 function createHtmlFunction(source) {
     const [headSource, footerSource] = source.split("<!-- element -->");
