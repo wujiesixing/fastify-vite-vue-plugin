@@ -50,6 +50,7 @@ export function createRoute(
         firstRender: true,
         state: null,
         data: [],
+        timestamp: Date.now(),
       };
     },
     handler,

@@ -17,6 +17,7 @@ function createRoute(fastify, route, handler) {
                 firstRender: true,
                 state: null,
                 data: [],
+                timestamp: Date.now(),
             };
         },
         handler,
