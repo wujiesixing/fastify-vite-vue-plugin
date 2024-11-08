@@ -17,6 +17,7 @@ export interface SSRContext extends VueSSRContext, RenderOptions, Omit<RouteNode
         resolve: null | any;
         reject: null | any;
     }>;
+    timestamp: number;
 }
 export declare function createRoute(fastify: FastifyInstance, route: RouteNode, handler: RouteHandlerMethod): void;
 export declare function createRouteHandler(): RouteHandlerMethod;

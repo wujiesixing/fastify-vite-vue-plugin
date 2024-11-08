@@ -28,6 +28,7 @@ export interface SSRContext
     resolve: null | any;
     reject: null | any;
   }>;
+  timestamp: number;
 }
 
 export function createRoute(

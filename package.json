@@ -1,6 +1,6 @@
 {
   "name": "fastify-vite-vue-plugin",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "type": "module",
   "main": "dist/cjs/index.cjs",
