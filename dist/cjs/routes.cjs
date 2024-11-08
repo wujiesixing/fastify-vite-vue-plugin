@@ -1,11 +1,8 @@
 'use strict';
 
-var dayjs = require('dayjs');
-var utc = require('dayjs/plugin/utc');
 var lodashEs = require('lodash-es');
-var utils = require('./utils.cjs');
+var utilsBrowser = require('./utils-browser.cjs');
 
-dayjs.extend(utc);
 function formatPath(path) {
     return path.replace(/\/+/g, "/").replace(/(?!^)\/$/, "");
 }
@@ -16,21 +13,9 @@ function getFullPath(path, base = "") {
     return formatPath("/" + base + "/" + path);
 }
 function getRoutes(array, base) {
-    const nowUtc = dayjs().utc();
     const names = [];
     function _getRoutes(_array, _base) {
-        return _array
-            .filter(({ meta = {} }) => {
-            const { startTime, endTime } = meta;
-            if (startTime && nowUtc < dayjs(startTime).utc()) {
-                return false;
-            }
-            if (endTime && nowUtc >= dayjs(endTime).utc()) {
-                return false;
-            }
-            return true;
-        })
-            .map((route) => {
+        return _array.map((route) => {
             let { path, meta, name } = route;
             const { component, redirect, children } = route;
             name = name || getFullPath(path, _base?.path);
@@ -105,7 +90,7 @@ function flatRoutes(array, base) {
             }
         });
     }
-    return utils.deepFreeze(_flatRoutes(array, base));
+    return utilsBrowser.deepFreeze(_flatRoutes(array, base));
 }
 
 exports.flatRoutes = flatRoutes;

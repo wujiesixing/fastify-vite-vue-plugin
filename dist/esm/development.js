@@ -4,7 +4,7 @@ import prepareClient from './client.js';
 import createHtmlFunction from './html.js';
 import createRenderFunction from './render.js';
 import resolveViteConfig from './resolveViteConfig.js';
-import { resolve } from './utils.js';
+import { resolve } from './utils-node.js';
 
 async function development(fastify, options) {
     const { createServer, createServerModuleRunner, mergeConfig } = await import('vite');

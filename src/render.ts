@@ -30,7 +30,7 @@ export default async function createRenderFunction({
     let preloadLinks = null;
 
     if (!request.ctx?.csr) {
-      const { app, ctx } = await create(request.ctx);
+      const { app, ctx } = await create(request.ctx, request.url);
 
       if (request.ctx?.stream) {
         stream = renderToNodeStream(app, ctx);

@@ -5,7 +5,7 @@ import { uneval } from "devalue";
 import { createServerHead } from "unhead";
 
 import createTemplateFunction from "./template";
-import { generateStream } from "./utils";
+import { generateStream } from "./utils-node";
 
 import type { FastifyReply } from "fastify";
 import { RenderResponse } from "./render";

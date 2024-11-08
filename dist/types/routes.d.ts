@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import type { Head } from "@unhead/schema";
 import type { RouteComponent, RouteRecordRaw } from "vue-router";
 type Lazy<T> = () => Promise<T>;
@@ -36,8 +35,6 @@ export interface RenderOptions {
 interface RouteMetaBase {
     head?: Head;
     render?: RenderOptions;
-    startTime?: dayjs.ConfigType;
-    endTime?: dayjs.ConfigType;
     provide?: Omit<RouteMetaBase, "provide">;
 }
 /**
@@ -52,7 +49,7 @@ export interface RouteBase {
     redirect?: string;
     children?: RouteBase[];
 }
-export interface RouteServer extends Omit<RouteBase, "component" | "meta" | "children">, Omit<RouteMetaBase, "provide"> {
+export interface RouteNode extends Omit<RouteBase, "component" | "meta" | "children">, Omit<RouteMetaBase, "provide"> {
 }
 export declare function getRoutes(array: readonly RouteBase[], base?: {
     path: string;
@@ -61,5 +58,5 @@ export declare function getRoutes(array: readonly RouteBase[], base?: {
 export declare function flatRoutes(array: readonly RouteBase[], base?: {
     path: string;
     meta?: Omit<RouteMetaBase, "provide">;
-}): readonly RouteServer[];
+}): readonly RouteNode[];
 export {};

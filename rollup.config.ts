@@ -3,7 +3,7 @@ import { defineConfig } from "rollup";
 import del from "rollup-plugin-delete";
 
 export default defineConfig({
-  input: "src/index.ts",
+  input: ["src/index.ts", "src/browser.ts"],
   output: [
     {
       dir: "dist",

@@ -9,4 +9,3 @@ var routes = require('./routes.cjs');
 
 exports.default = plugin.default;
 exports.flatRoutes = routes.flatRoutes;
-exports.getRoutes = routes.getRoutes;

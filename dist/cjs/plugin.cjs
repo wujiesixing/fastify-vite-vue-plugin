@@ -11,8 +11,8 @@ var plugin = plugin$1(async function (fastify, options) {
     const { routes } = process.env.NODE_ENV === "development"
         ? await development.default(fastify, options)
         : await production.default(fastify, options);
-    for (const route$1 of routes.server) {
-        route.createRoute(fastify, route$1, routes.client, route.createRouteHandler());
+    for (const route$1 of routes) {
+        route.createRoute(fastify, route$1, route.createRouteHandler());
     }
 }, {
     name: "fastify-vite-vue-plugin",
