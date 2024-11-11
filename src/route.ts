@@ -29,6 +29,7 @@ export interface SSRContext
     reject: null | any;
   }>;
   timestamp: number;
+  cookies: { [cookieName: string]: string | undefined };
 }
 
 export function createRoute(
