@@ -32,7 +32,7 @@ export interface RenderOptions {
      */
     stream?: boolean;
 }
-interface RouteMetaBase {
+export interface RouteMetaBase {
     head?: Head;
     render?: RenderOptions;
     provide?: Omit<RouteMetaBase, "provide">;
