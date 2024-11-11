@@ -16,6 +16,7 @@ function createRoute(fastify, route, handler) {
                 state: null,
                 data: [],
                 timestamp: Date.now(),
+                cookies: request.cookies || {},
             };
         },
         handler,

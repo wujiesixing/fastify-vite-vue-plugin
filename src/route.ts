@@ -52,6 +52,7 @@ export function createRoute(
         state: null,
         data: [],
         timestamp: Date.now(),
+        cookies: request.cookies || {},
       };
     },
     handler,
