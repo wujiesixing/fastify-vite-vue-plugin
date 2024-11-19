@@ -16,17 +16,27 @@ function createHtmlFunction(source) {
     const headTemplate = template.default(headSource);
     const footerTemplate = template.default(footerSource);
     return async function ({ ctx, body, stream, preloadLinks }) {
-        const head = unhead.createServerHead();
+        let head = {};
+        const unhead$1 = unhead.createServerHead();
         if (ctx.head) {
-            head.push(ctx.head);
+            if (typeof ctx.head === "function") {
+                head = await ctx.head();
+            }
+            else {
+                head = ctx.head;
+            }
+            unhead$1.push(head);
         }
-        const { headTags, bodyTags, bodyTagsOpen, htmlAttrs, bodyAttrs } = await ssr.renderSSRHead(head);
+        const { headTags, bodyTags, bodyTagsOpen, htmlAttrs, bodyAttrs } = await ssr.renderSSRHead(unhead$1);
         const readable = node_stream.Readable.from(utilsNode.generateStream(headTemplate({
             htmlAttrs,
             headTags,
             bodyAttrs,
             bodyTagsOpen,
-            hydration: `<script>window.__INITIAL_CONTEXT__=${devalue.uneval(ctx)};</script>`,
+            hydration: `<script>window.__INITIAL_CONTEXT__=${devalue.uneval({
+                ...ctx,
+                head,
+            })};</script>`,
             preloadLinks,
         }), body ?? stream ?? "", footerTemplate({
             bodyTags,

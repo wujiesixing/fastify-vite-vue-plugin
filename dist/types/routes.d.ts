@@ -33,7 +33,7 @@ export interface RenderOptions {
     stream?: boolean;
 }
 export interface RouteMetaBase {
-    head?: Head;
+    head?: Head | (() => Promise<Head>);
     render?: RenderOptions;
     provide?: Omit<RouteMetaBase, "provide">;
 }

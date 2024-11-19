@@ -7,8 +7,9 @@ import { createServerHead } from "unhead";
 import createTemplateFunction from "./template";
 import { generateStream } from "./utils-node";
 
+import type { Head } from "@unhead/schema";
 import type { FastifyReply } from "fastify";
-import { RenderResponse } from "./render";
+import type { RenderResponse } from "./render";
 
 export type HtmlFunc = (renderResponse: RenderResponse) => Promise<void>;
 
@@ -23,14 +24,21 @@ export default function createHtmlFunction(source: string): HtmlFunc {
     this: FastifyReply,
     { ctx, body, stream, preloadLinks }
   ) {
-    const head = createServerHead();
+    let head: Head = {};
+    const unhead = createServerHead();
 
     if (ctx.head) {
-      head.push(ctx.head);
+      if (typeof ctx.head === "function") {
+        head = await ctx.head();
+      } else {
+        head = ctx.head;
+      }
+
+      unhead.push(head);
     }
 
     const { headTags, bodyTags, bodyTagsOpen, htmlAttrs, bodyAttrs } =
-      await renderSSRHead(head);
+      await renderSSRHead(unhead);
 
     const readable = Readable.from(
       generateStream(
@@ -39,9 +47,10 @@ export default function createHtmlFunction(source: string): HtmlFunc {
           headTags,
           bodyAttrs,
           bodyTagsOpen,
-          hydration: `<script>window.__INITIAL_CONTEXT__=${uneval(
-            ctx
-          )};</script>`,
+          hydration: `<script>window.__INITIAL_CONTEXT__=${uneval({
+            ...ctx,
+            head,
+          })};</script>`,
           preloadLinks,
         }),
         body ?? stream ?? "",
