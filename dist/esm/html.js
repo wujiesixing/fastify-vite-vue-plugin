@@ -2,6 +2,7 @@ import { Readable } from 'node:stream';
 import { renderSSRHead } from '@unhead/ssr';
 import { uneval } from 'devalue';
 import { createServerHead } from 'unhead';
+import { defaultsDeep } from 'lodash-es';
 import createTemplateFunction from './template.js';
 import { generateStream } from './utils-node.js';
 
@@ -16,7 +17,7 @@ function createHtmlFunction(source) {
         const unhead = createServerHead();
         if (ctx.head) {
             if (typeof ctx.head === "function") {
-                head = await ctx.head();
+                head = defaultsDeep({}, await ctx.head(), { ...ctx.head });
             }
             else {
                 head = ctx.head;

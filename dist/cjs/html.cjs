@@ -6,6 +6,7 @@ var node_stream = require('node:stream');
 var ssr = require('@unhead/ssr');
 var devalue = require('devalue');
 var unhead = require('unhead');
+var lodashEs = require('lodash-es');
 var template = require('./template.cjs');
 var utilsNode = require('./utils-node.cjs');
 
@@ -20,7 +21,7 @@ function createHtmlFunction(source) {
         const unhead$1 = unhead.createServerHead();
         if (ctx.head) {
             if (typeof ctx.head === "function") {
-                head = await ctx.head();
+                head = lodashEs.defaultsDeep({}, await ctx.head(), { ...ctx.head });
             }
             else {
                 head = ctx.head;
