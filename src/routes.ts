@@ -1,4 +1,4 @@
-import { defaultsDeep, isNil, omit } from "lodash-es";
+import { isNil, mergeWith, omit } from "lodash-es";
 
 import { deepFreeze } from "./utils-browser";
 
@@ -114,9 +114,27 @@ export function getRoutes(
 
       path = formatPath(path);
 
-      const provide = defaultsDeep({}, meta?.provide, _base?.meta);
+      const provide = mergeWith(
+        {},
+        _base?.meta,
+        meta?.provide,
+        (objValue, srcValue) => {
+          if (Array.isArray(objValue)) {
+            return objValue.concat(srcValue);
+          }
+        }
+      );
 
-      meta = defaultsDeep({}, omit(meta, ["provide"]), provide);
+      meta = mergeWith(
+        {},
+        provide,
+        omit(meta, ["provide"]),
+        (objValue, srcValue) => {
+          if (Array.isArray(objValue)) {
+            return objValue.concat(srcValue);
+          }
+        }
+      );
 
       if (component && isNil(redirect) && isNil(children)) {
         return {
@@ -178,9 +196,27 @@ export function flatRoutes(
 
       const fullPath = getFullPath(path, _base?.path);
 
-      const provide = defaultsDeep({}, meta?.provide, _base?.meta);
+      const provide = mergeWith(
+        {},
+        _base?.meta,
+        meta?.provide,
+        (objValue, srcValue) => {
+          if (Array.isArray(objValue)) {
+            return objValue.concat(srcValue);
+          }
+        }
+      );
 
-      meta = defaultsDeep({}, omit(meta, ["provide"]), provide);
+      meta = mergeWith(
+        {},
+        provide,
+        omit(meta, ["provide"]),
+        (objValue, srcValue) => {
+          if (Array.isArray(objValue)) {
+            return objValue.concat(srcValue);
+          }
+        }
+      );
 
       let currentRoute: RouteNode | null = null;
 

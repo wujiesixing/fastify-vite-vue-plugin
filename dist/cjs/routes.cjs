@@ -24,8 +24,16 @@ function getRoutes(array, base) {
             }
             names.push(name);
             path = formatPath(path);
-            const provide = lodashEs.defaultsDeep({}, meta?.provide, _base?.meta);
-            meta = lodashEs.defaultsDeep({}, lodashEs.omit(meta, ["provide"]), provide);
+            const provide = lodashEs.mergeWith({}, _base?.meta, meta?.provide, (objValue, srcValue) => {
+                if (Array.isArray(objValue)) {
+                    return objValue.concat(srcValue);
+                }
+            });
+            meta = lodashEs.mergeWith({}, provide, lodashEs.omit(meta, ["provide"]), (objValue, srcValue) => {
+                if (Array.isArray(objValue)) {
+                    return objValue.concat(srcValue);
+                }
+            });
             if (component && lodashEs.isNil(redirect) && lodashEs.isNil(children)) {
                 return {
                     ...route,
@@ -66,8 +74,16 @@ function flatRoutes(array, base) {
             let { meta } = route;
             const { path, component, redirect, children } = route;
             const fullPath = getFullPath(path, _base?.path);
-            const provide = lodashEs.defaultsDeep({}, meta?.provide, _base?.meta);
-            meta = lodashEs.defaultsDeep({}, lodashEs.omit(meta, ["provide"]), provide);
+            const provide = lodashEs.mergeWith({}, _base?.meta, meta?.provide, (objValue, srcValue) => {
+                if (Array.isArray(objValue)) {
+                    return objValue.concat(srcValue);
+                }
+            });
+            meta = lodashEs.mergeWith({}, provide, lodashEs.omit(meta, ["provide"]), (objValue, srcValue) => {
+                if (Array.isArray(objValue)) {
+                    return objValue.concat(srcValue);
+                }
+            });
             let currentRoute = null;
             if (component || redirect) {
                 if (paths.includes(fullPath)) {
