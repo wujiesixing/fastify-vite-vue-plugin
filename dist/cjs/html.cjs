@@ -10,12 +10,12 @@ var lodashEs = require('lodash-es');
 var template = require('./template.cjs');
 var utilsNode = require('./utils-node.cjs');
 
-function createHtmlFunction(source) {
+function createHtmlFunction(source, options) {
     const [headSource, footerSource] = source.split("<!-- element -->");
     // .replace(/<script[^>]+type="module"[^>]+>.*?<\/script>/g, '')
     // .split('<!-- element -->')
-    const headTemplate = template.default(headSource);
-    const footerTemplate = template.default(footerSource);
+    const headTemplate = template.default(headSource, options);
+    const footerTemplate = template.default(footerSource, options);
     return async function ({ ctx, body, stream, preloadLinks }) {
         let head = {};
         const unhead$1 = unhead.createServerHead();

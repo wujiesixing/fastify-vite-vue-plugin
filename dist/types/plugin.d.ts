@@ -1,7 +1,13 @@
+import { LRUCache } from "lru-cache";
+import type { LRUCache as LRUCacheType } from "lru-cache";
 import type { Client } from "./client";
+import type { TemplateFunc } from "./template";
 export interface Options {
     root: string;
     prepareClient?: (...args: any[]) => Promise<Client>;
+    template?: {
+        cache?: false | LRUCache<string, TemplateFunc, unknown> | LRUCacheType.Options<string, TemplateFunc, unknown>;
+    };
     build: {
         outDir: {
             server: string;

@@ -31,7 +31,7 @@ async function development(fastify, options) {
     fastify.addHook("onRequest", async (request, reply) => {
         const indexHtml = await readFile(resolve("index.html"), "utf-8");
         const template = await server.transformIndexHtml(request.url, indexHtml);
-        reply.html = createHtmlFunction(template);
+        reply.html = createHtmlFunction(template, options.template);
         reply.render = await createRenderFunction(await loadClient());
     });
     fastify.addHook("onClose", async () => {

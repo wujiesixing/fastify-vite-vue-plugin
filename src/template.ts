@@ -1,5 +1,7 @@
 import { Readable } from "node:stream";
 
+import type { LRUCache as LRUCacheType } from "lru-cache";
+
 interface Range {
   param: string;
   end: number;
@@ -11,15 +13,28 @@ type Interpolated =
       param: string;
     };
 
-type TemplateFunc<T = Record<string, any>> = (params: T) => Readable;
+export type TemplateFunc<T = Record<string, any>> = (params: T) => Readable;
 
-export default function createTemplateFunction(source: string): TemplateFunc {
+export interface TemplateOptions {
+  cache?: LRUCacheType<string, TemplateFunc>;
+}
+
+export default function createTemplateFunction(
+  source: string,
+  options?: TemplateOptions
+): TemplateFunc {
+  const cache = options?.cache;
+
+  if (cache?.has(source)) {
+    return cache.get(source)!;
+  }
+
   const params = new Set<string>();
   const ranges = new Map<number, Range>();
   const interpolated: Interpolated[] = [];
 
   for (const match of source.matchAll(
-    /<!--\s*([a-zA-Z_$][a-zA-Z0-9_$]*(\.[a-zA-Z_$][a-zA-Z0-9_$]*)*)\s*-->/g
+    /<!--\s*([a-zA-Z_$][\w$]*(\.[a-zA-Z_$][\w$]*)*)\s*-->/g
   )) {
     params.add(match[1].split(".")[0]);
     ranges.set(match.index, {
@@ -41,11 +56,15 @@ export default function createTemplateFunction(source: string): TemplateFunc {
     }
   }
 
-  return (0, eval)(
+  const templateFunction = (0, eval)(
     `(asReadable) => (function ({ ${[...params].join(", ")} }) {` +
       `return asReadable\`${interpolated.map((s) => serialize(s)).join("")}\`` +
       "})"
   )(asReadable);
+
+  cache?.set(source, templateFunction);
+
+  return templateFunction;
 }
 
 function asReadable(fragments: TemplateStringsArray, ...values: any[]) {

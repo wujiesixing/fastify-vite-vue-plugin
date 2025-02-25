@@ -12,6 +12,7 @@ import { resolve } from "./utils-node";
 
 import type { FastifyInstance } from "fastify";
 import type { Options } from "./plugin";
+import type { TemplateOptions } from "./template";
 
 export type Manifest = Record<string, string[]>;
 
@@ -60,7 +61,10 @@ export default async function production(
   );
 
   const indexHtml = await readFile(join(clientDist, "index.html"), "utf-8");
-  fastify.decorateReply("html", createHtmlFunction(indexHtml));
+  fastify.decorateReply(
+    "html",
+    createHtmlFunction(indexHtml, options.template as TemplateOptions)
+  );
 
   async function loadClient() {
     const ssrManifest = join(clientDist, ".vite", "ssr-manifest.json");

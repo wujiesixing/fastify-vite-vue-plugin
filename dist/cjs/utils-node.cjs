@@ -1,6 +1,7 @@
 'use strict';
 
 var node_path = require('node:path');
+require('node:stream');
 
 function resolve(...args) {
     return node_path.resolve(process.cwd(), ...args);

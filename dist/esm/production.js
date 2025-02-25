@@ -40,7 +40,7 @@ async function production(fastify, options) {
     const { client, manifest } = await loadClient();
     fastify.decorateReply("render", await createRenderFunction({ ...client, manifest }));
     const indexHtml = await readFile(join(clientDist, "index.html"), "utf-8");
-    fastify.decorateReply("html", createHtmlFunction(indexHtml));
+    fastify.decorateReply("html", createHtmlFunction(indexHtml, options.template));
     async function loadClient() {
         const ssrManifest = join(clientDist, ".vite", "ssr-manifest.json");
         const manifest = JSON.parse(readFileSync(ssrManifest, "utf-8"));

@@ -2,6 +2,8 @@ import { resolve as $resolve } from "node:path";
 
 import type { Readable } from "node:stream";
 
+export { default as createTemplateFunction } from "./template";
+
 export function resolve(...args: string[]) {
   return $resolve(process.cwd(), ...args);
 }

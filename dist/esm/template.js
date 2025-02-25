@@ -1,10 +1,14 @@
 import { Readable } from 'node:stream';
 
-function createTemplateFunction(source) {
+function createTemplateFunction(source, options) {
+    const cache = options?.cache;
+    if (cache?.has(source)) {
+        return cache.get(source);
+    }
     const params = new Set();
     const ranges = new Map();
     const interpolated = [];
-    for (const match of source.matchAll(/<!--\s*([a-zA-Z_$][a-zA-Z0-9_$]*(\.[a-zA-Z_$][a-zA-Z0-9_$]*)*)\s*-->/g)) {
+    for (const match of source.matchAll(/<!--\s*([a-zA-Z_$][\w$]*(\.[a-zA-Z_$][\w$]*)*)\s*-->/g)) {
         params.add(match[1].split(".")[0]);
         ranges.set(match.index, {
             param: match[1],
@@ -23,9 +27,11 @@ function createTemplateFunction(source) {
             interpolated[cursor] = (interpolated[cursor] ?? "") + source[i];
         }
     }
-    return (0, eval)(`(asReadable) => (function ({ ${[...params].join(", ")} }) {` +
+    const templateFunction = (0, eval)(`(asReadable) => (function ({ ${[...params].join(", ")} }) {` +
         `return asReadable\`${interpolated.map((s) => serialize(s)).join("")}\`` +
         "})")(asReadable);
+    cache?.set(source, templateFunction);
+    return templateFunction;
 }
 function asReadable(fragments, ...values) {
     return Readable.from((async function* () {

@@ -1,4 +1,5 @@
 import { resolve as resolve$1 } from 'node:path';
+import 'node:stream';
 
 function resolve(...args) {
     return resolve$1(process.cwd(), ...args);

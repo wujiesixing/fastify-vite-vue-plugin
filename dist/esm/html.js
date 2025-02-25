@@ -6,12 +6,12 @@ import { defaultsDeep } from 'lodash-es';
 import createTemplateFunction from './template.js';
 import { generateStream } from './utils-node.js';
 
-function createHtmlFunction(source) {
+function createHtmlFunction(source, options) {
     const [headSource, footerSource] = source.split("<!-- element -->");
     // .replace(/<script[^>]+type="module"[^>]+>.*?<\/script>/g, '')
     // .split('<!-- element -->')
-    const headTemplate = createTemplateFunction(headSource);
-    const footerTemplate = createTemplateFunction(footerSource);
+    const headTemplate = createTemplateFunction(headSource, options);
+    const footerTemplate = createTemplateFunction(footerSource, options);
     return async function ({ ctx, body, stream, preloadLinks }) {
         let head = {};
         const unhead = createServerHead();

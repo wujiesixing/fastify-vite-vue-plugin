@@ -10,6 +10,7 @@ import { resolve } from "./utils-node";
 
 import type { FastifyInstance } from "fastify";
 import type { Options } from "./plugin";
+import type { TemplateOptions } from "./template";
 
 export default async function development(
   fastify: FastifyInstance,
@@ -56,7 +57,10 @@ export default async function development(
 
     const template = await server.transformIndexHtml(request.url, indexHtml);
 
-    reply.html = createHtmlFunction(template);
+    reply.html = createHtmlFunction(
+      template,
+      options.template as TemplateOptions
+    );
 
     reply.render = await createRenderFunction(await loadClient());
   });

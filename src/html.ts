@@ -11,15 +11,19 @@ import { generateStream } from "./utils-node";
 import type { Head } from "@unhead/schema";
 import type { FastifyReply } from "fastify";
 import type { RenderResponse } from "./render";
+import type { TemplateOptions } from "./template";
 
 export type HtmlFunc = (renderResponse: RenderResponse) => Promise<void>;
 
-export default function createHtmlFunction(source: string): HtmlFunc {
+export default function createHtmlFunction(
+  source: string,
+  options?: TemplateOptions
+): HtmlFunc {
   const [headSource, footerSource] = source.split("<!-- element -->");
   // .replace(/<script[^>]+type="module"[^>]+>.*?<\/script>/g, '')
   // .split('<!-- element -->')
-  const headTemplate = createTemplateFunction(headSource);
-  const footerTemplate = createTemplateFunction(footerSource);
+  const headTemplate = createTemplateFunction(headSource, options);
+  const footerTemplate = createTemplateFunction(footerSource, options);
 
   return async function (
     this: FastifyReply,
