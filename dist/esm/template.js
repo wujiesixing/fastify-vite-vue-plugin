@@ -27,7 +27,7 @@ function createTemplateFunction(source, options) {
             interpolated[cursor] = (interpolated[cursor] ?? "") + source[i];
         }
     }
-    const templateFunction = (0, eval)(`(asReadable) => (function ({ ${[...params].join(", ")} }) {` +
+    const templateFunction = (0, eval)(`(asReadable) => (function ({ ${[...params].join(", ")} } = {}) {` +
         `return asReadable\`${interpolated.map((s) => serialize(s)).join("")}\`` +
         "})")(asReadable);
     cache?.set(source, templateFunction);

@@ -13,7 +13,7 @@ type Interpolated =
       param: string;
     };
 
-export type TemplateFunc<T = Record<string, any>> = (params: T) => Readable;
+export type TemplateFunc<T = Record<string, any>> = (params?: T) => Readable;
 
 export interface TemplateOptions {
   cache?: LRUCacheType<string, TemplateFunc>;
@@ -57,7 +57,7 @@ export default function createTemplateFunction(
   }
 
   const templateFunction = (0, eval)(
-    `(asReadable) => (function ({ ${[...params].join(", ")} }) {` +
+    `(asReadable) => (function ({ ${[...params].join(", ")} } = {}) {` +
       `return asReadable\`${interpolated.map((s) => serialize(s)).join("")}\`` +
       "})"
   )(asReadable);
