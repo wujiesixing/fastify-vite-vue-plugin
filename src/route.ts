@@ -1,5 +1,3 @@
-import { omit } from "lodash-es";
-
 import type {
   FastifyInstance,
   FastifyReply,
@@ -9,10 +7,7 @@ import type {
 import type { SSRContext as VueSSRContext } from "vue/server-renderer";
 import type { RenderOptions, RouteNode } from "./routes";
 
-export interface SSRContext
-  extends VueSSRContext,
-    RenderOptions,
-    Omit<RouteNode, "render"> {
+export interface SSRContext extends VueSSRContext, RenderOptions {
   hostname: string;
   url: string;
   firstRender: boolean;
@@ -46,7 +41,6 @@ export function createRoute(
 
       request.ctx = {
         ...route.render,
-        ...omit(route, ["render"]),
         hostname: request.hostname,
         url: request.url,
         firstRender: true,

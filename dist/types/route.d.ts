@@ -1,7 +1,7 @@
 import type { FastifyInstance, RouteHandlerMethod } from "fastify";
 import type { SSRContext as VueSSRContext } from "vue/server-renderer";
 import type { RenderOptions, RouteNode } from "./routes";
-export interface SSRContext extends VueSSRContext, RenderOptions, Omit<RouteNode, "render"> {
+export interface SSRContext extends VueSSRContext, RenderOptions {
     hostname: string;
     url: string;
     firstRender: boolean;

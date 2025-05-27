@@ -1,7 +1,5 @@
 'use strict';
 
-var lodashEs = require('lodash-es');
-
 function createRoute(fastify, route, handler) {
     fastify.get(route.path, {
         async onRequest(request, reply) {
@@ -11,7 +9,6 @@ function createRoute(fastify, route, handler) {
             }
             request.ctx = {
                 ...route.render,
-                ...lodashEs.omit(route, ["render"]),
                 hostname: request.hostname,
                 url: request.url,
                 firstRender: true,
