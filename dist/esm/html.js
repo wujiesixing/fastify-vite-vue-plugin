@@ -1,8 +1,8 @@
 import { Readable } from 'node:stream';
 import { renderSSRHead } from '@unhead/ssr';
 import { uneval } from 'devalue';
-import { createServerHead } from 'unhead';
 import { defaultsDeep } from 'lodash-es';
+import { createServerHead } from 'unhead';
 import createTemplateFunction from './template.js';
 import { generateStream } from './utils-node.js';
 
@@ -23,6 +23,7 @@ function createHtmlFunction(source, options) {
                 head = ctx.head;
             }
             unhead.push(head);
+            delete ctx.head;
         }
         const { headTags, bodyTags, bodyTagsOpen, htmlAttrs, bodyAttrs } = await renderSSRHead(unhead);
         const readable = Readable.from(generateStream(headTemplate({
@@ -32,7 +33,6 @@ function createHtmlFunction(source, options) {
             bodyTagsOpen,
             hydration: `<script>window.__INITIAL_CONTEXT__=${uneval({
                 ...ctx,
-                head,
             })};</script>`,
             preloadLinks,
         }), body ?? stream ?? "", footerTemplate({

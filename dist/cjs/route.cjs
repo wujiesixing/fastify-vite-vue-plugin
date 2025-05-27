@@ -9,6 +9,7 @@ function createRoute(fastify, route, handler) {
             }
             request.ctx = {
                 ...route.render,
+                head: route.head,
                 hostname: request.hostname,
                 url: request.url,
                 firstRender: true,

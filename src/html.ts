@@ -2,8 +2,8 @@ import { Readable } from "node:stream";
 
 import { renderSSRHead } from "@unhead/ssr";
 import { uneval } from "devalue";
-import { createServerHead } from "unhead";
 import { defaultsDeep } from "lodash-es";
+import { createServerHead } from "unhead";
 
 import createTemplateFunction from "./template";
 import { generateStream } from "./utils-node";
@@ -40,6 +40,8 @@ export default function createHtmlFunction(
       }
 
       unhead.push(head);
+
+      delete ctx.head;
     }
 
     const { headTags, bodyTags, bodyTagsOpen, htmlAttrs, bodyAttrs } =
@@ -54,7 +56,6 @@ export default function createHtmlFunction(
           bodyTagsOpen,
           hydration: `<script>window.__INITIAL_CONTEXT__=${uneval({
             ...ctx,
-            head,
           })};</script>`,
           preloadLinks,
         }),

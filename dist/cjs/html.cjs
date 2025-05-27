@@ -5,8 +5,8 @@ Object.defineProperty(exports, '__esModule', { value: true });
 var node_stream = require('node:stream');
 var ssr = require('@unhead/ssr');
 var devalue = require('devalue');
-var unhead = require('unhead');
 var lodashEs = require('lodash-es');
+var unhead = require('unhead');
 var template = require('./template.cjs');
 var utilsNode = require('./utils-node.cjs');
 
@@ -27,6 +27,7 @@ function createHtmlFunction(source, options) {
                 head = ctx.head;
             }
             unhead$1.push(head);
+            delete ctx.head;
         }
         const { headTags, bodyTags, bodyTagsOpen, htmlAttrs, bodyAttrs } = await ssr.renderSSRHead(unhead$1);
         const readable = node_stream.Readable.from(utilsNode.generateStream(headTemplate({
@@ -36,7 +37,6 @@ function createHtmlFunction(source, options) {
             bodyTagsOpen,
             hydration: `<script>window.__INITIAL_CONTEXT__=${devalue.uneval({
                 ...ctx,
-                head,
             })};</script>`,
             preloadLinks,
         }), body ?? stream ?? "", footerTemplate({
